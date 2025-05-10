@@ -276,6 +276,7 @@ ClientConnectionCallback(
         }        
         QUIC_STATISTICS Stats = {0};
         uint32_t StatsLen = sizeof(Stats);
+        
         if (QUIC_SUCCEEDED(MsQuic->GetParam(Connection, QUIC_PARAM_CONN_STATISTICS, &StatsLen, &Stats))) {
                 double hs_duration = (Stats.Timing.HandshakeFlightEnd - Stats.Timing.Start) / 1000.0;
 
@@ -289,7 +290,16 @@ ClientConnectionCallback(
                     double end_ms = Stats.Timing.HandshakeFlightEnd / 1000.0;
                     printf("Handshake error!! - Start: %.2f ms - End: %.2f ms\n", start_ms, end_ms);
                 }
-         } 
+                   
+                    
+                    printf("Handshake info!! - %s - Start: %" PRIu64 " - End: %" PRIu64 "\n", Ctx->SigAlgName, Stats.Timing.Start, Stats.Timing.HandshakeFlightEnd);
+                    double start_ms = Stats.Timing.Start / 1000.0;
+                    double end_ms = Stats.Timing.HandshakeFlightEnd / 1000.0;
+                    printf("Handshake info!! - Start: %.2f ms - End: %.2f ms\n", start_ms, end_ms);
+        } 
+
+        printf("Handshake finish");
+        
         // In this sample, the client immediately shuts down the connection after the handshake.
         if(Connection != NULL) {
             MsQuic->ConnectionShutdown(Connection, QUIC_CONNECTION_SHUTDOWN_FLAG_NONE, 0);
