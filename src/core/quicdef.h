@@ -210,12 +210,12 @@ typedef struct QUIC_RX_PACKET QUIC_RX_PACKET;
 //
 // The maximum crypto FC window we will use/allow for client buffers.
 //
-#define QUIC_MAX_TLS_CLIENT_SEND_BUFFER         (64 * 1024) - 1
+#define QUIC_MAX_TLS_CLIENT_SEND_BUFFER         (128 * 1024) - 1
 
 //
 // The maximum crypto FC window we will use/allow for server buffers.
 //
-#define QUIC_MAX_TLS_SERVER_SEND_BUFFER         (64 * 1024) - 1
+#define QUIC_MAX_TLS_SERVER_SEND_BUFFER         (128 * 1024) - 1
 
 //
 // The initial stream FC window size reported to peers.
