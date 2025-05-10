@@ -275,7 +275,7 @@ ClientConnectionCallback(
         if(VerboseEnabled){
             printf("[conn][%p] Connected\n", Connection);
         }        
-        QUIC_STATISTICS Stats = {0};
+        /*QUIC_STATISTICS Stats = {0};
         uint32_t StatsLen = sizeof(Stats);
         
         if (QUIC_SUCCEEDED(MsQuic->GetParam(Connection, QUIC_PARAM_CONN_STATISTICS, &StatsLen, &Stats))) {
@@ -297,7 +297,7 @@ ClientConnectionCallback(
                     double start_ms = Stats.Timing.Start / 1000.0;
                     double end_ms = Stats.Timing.HandshakeFlightEnd / 1000.0;
                     printf("Handshake info!! - Start: %.2f ms - End: %.2f ms\n", start_ms, end_ms);
-        } 
+        } */
 
        // printf("Handshake finish");
         
@@ -367,7 +367,7 @@ ClientConnectionCallback(
                 }
         } 
         else {
-            printf("Zandshake error!!);
+            printf("Zandshake error!!"));
         }
         
         if (!Event->SHUTDOWN_COMPLETE.AppCloseInProgress) {
