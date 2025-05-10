@@ -12,7 +12,9 @@
 // the app (used for persistent storage and for debugging). It also configures
 // the execution profile, using the default "low latency" profile.
 //
-const QUIC_REGISTRATION_CONFIG RegConfig = { "quics_server", QUIC_EXECUTION_PROFILE_LOW_LATENCY };
+//const QUIC_REGISTRATION_CONFIG RegConfig = { "quics_server", QUIC_EXECUTION_PROFILE_LOW_LATENCY };
+const QUIC_REGISTRATION_CONFIG RegConfig = { "quics_server", QUIC_EXECUTION_PROFILE_TYPE_REAL_TIME };
+
 
 //
 // The protocol name used in the Application Layer Protocol Negotiation (ALPN).
@@ -28,7 +30,7 @@ uint16_t UdpPort = 4433;
 //
 // The default idle timeout period (1 second) used for the protocol.
 //
-const uint64_t IdleTimeoutMs = 1000;
+const uint64_t IdleTimeoutMs = 120000;
 
 //
 // The length of buffer sent over the streams in the protocol.
@@ -365,7 +367,7 @@ ServerLoadConfiguration(
     // Configures the client max TLS buffer to make account for the use of 
     // post-quamtum certificates and key exchange mechanisms.
     //
-    Settings.TlsClientMaxSendBuffer = 0x8000;
+    Settings.TlsClientMaxSendBuffer =  1024 * 1024; //0x8000;
     Settings.IsSet.TlsClientMaxSendBuffer = TRUE;
 
     const char* CAfile;
