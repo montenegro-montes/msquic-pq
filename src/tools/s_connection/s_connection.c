@@ -415,7 +415,7 @@ ClientLoadConfiguration(
     //
     // Configures the client's idle timeout. 
     //
-    Settings.IdleTimeoutMs = IdleTimeoutMs;
+    Settings.IdleTimeoutMs = 120000;//IdleTimeoutMs;
     Settings.IsSet.IdleTimeoutMs = TRUE;
 
     // 
