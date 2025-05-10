@@ -69,7 +69,7 @@ BOOLEAN VerboseEnabled = FALSE;
 typedef struct {
     HQUIC Connection;
     double HandshakeDurationMs;
-    bool HandshakeMeasured;
+    BOOLEAN HandshakeMeasured;
 } APP_CONNECTION_CTX;
 
 
