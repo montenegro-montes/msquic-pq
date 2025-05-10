@@ -292,7 +292,7 @@ ClientConnectionCallback(
                 }
                    
                     
-                    printf("Handshake info!! - %s - Start: %" PRIu64 " - End: %" PRIu64 "\n", Ctx->SigAlgName, Stats.Timing.Start, Stats.Timing.HandshakeFlightEnd);
+                    printf("Handshake info!! - Start: %" PRIu64 " - End: %" PRIu64 "\n", Stats.Timing.Start, Stats.Timing.HandshakeFlightEnd);
                     double start_ms = Stats.Timing.Start / 1000.0;
                     double end_ms = Stats.Timing.HandshakeFlightEnd / 1000.0;
                     printf("Handshake info!! - Start: %.2f ms - End: %.2f ms\n", start_ms, end_ms);
