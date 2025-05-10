@@ -277,12 +277,12 @@ ClientConnectionCallback(
         if (QUIC_SUCCEEDED(MsQuic->GetParam(Connection, QUIC_PARAM_CONN_STATISTICS, &StatsLen, &Stats))) {
                 double hs_duration = (Stats.Timing.HandshakeFlightEnd - Stats.Timing.Start) / 1000.0;
 
-                if (hs_duration > 0 && hs_duration < 100000) {
+                if (hs_duration > 0 && hs_duration < 1000000) {
                     Ctx->HandshakeDurationMs = hs_duration;
                     Ctx->HandshakeMeasured = TRUE;
                     //printf("Handshake duration: %.2f ms\n", hs_duration);
                 } else {
-                    //printf("Handshake duration: NaN ms\n", );
+                    printf("Handshake error!! - Start: %.2f - End: %.2f",Stats.Timing.Start, Stats.Timing.HandshakeFlightEnd);
                 }
          } 
         // In this sample, the client immediately shuts down the connection after the handshake.
