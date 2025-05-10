@@ -107,10 +107,10 @@ QuicCryptoInitialize(
     CXPLAT_DBG_ASSERT(Crypto->Initialized == FALSE);
     QUIC_STATUS Status;
     QUIC_CONNECTION* Connection = QuicCryptoGetConnection(Crypto);
-    uint16_t SendBufferLength =
+    uint32_t SendBufferLength =
         QuicConnIsServer(Connection) ?
             QUIC_MAX_TLS_SERVER_SEND_BUFFER : QUIC_MAX_TLS_CLIENT_SEND_BUFFER;
-    uint16_t InitialRecvBufferLength =
+    uint32_t InitialRecvBufferLength =
         QuicConnIsServer(Connection) ?
             QUIC_MAX_TLS_CLIENT_SEND_BUFFER : QUIC_DEFAULT_STREAM_RECV_BUFFER_SIZE;
     const uint8_t* HandshakeCid;
