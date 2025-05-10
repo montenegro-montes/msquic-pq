@@ -3,6 +3,8 @@
 #include <stdlib.h>
 #include <time.h>
 #include <sys/time.h>
+#include <inttypes.h>
+
 
 #ifndef UNREFERENCED_PARAMETER
 #define UNREFERENCED_PARAMETER(P) (void)(P)
@@ -282,7 +284,10 @@ ClientConnectionCallback(
                     Ctx->HandshakeMeasured = TRUE;
                     //printf("Handshake duration: %.2f ms\n", hs_duration);
                 } else {
-                    printf("Handshake error!! - Start: %.2f - End: %.2f",Stats.Timing.Start, Stats.Timing.HandshakeFlightEnd);
+                    printf("Handshake error!! - Start: %" PRIu64 " - End: %" PRIu64 "\n", Stats.Timing.Start, Stats.Timing.HandshakeFlightEnd);
+                    double start_ms = Stats.Timing.Start / 1000.0;
+                    double end_ms = Stats.Timing.HandshakeFlightEnd / 1000.0;
+                    printf("Handshake error!! - Start: %.2f ms - End: %.2f ms\n", start_ms, end_ms);
                 }
          } 
         // In this sample, the client immediately shuts down the connection after the handshake.
