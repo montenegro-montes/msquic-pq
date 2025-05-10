@@ -66,6 +66,13 @@ const char* GroupsListVar = "GROUPS_LIST";
 //
 BOOLEAN VerboseEnabled = FALSE;
 
+typedef struct {
+    HQUIC Connection;
+    double HandshakeDurationMs;
+    bool HandshakeMeasured;
+} APP_CONNECTION_CTX;
+
+
 void PrintUsage()
 {
     printf(
@@ -254,7 +261,8 @@ ClientConnectionCallback(
     _Inout_ QUIC_CONNECTION_EVENT* Event
     )
 {
-    UNREFERENCED_PARAMETER(Context);
+    //UNREFERENCED_PARAMETER(Context);
+   APP_CONNECTION_CTX* Ctx = (APP_CONNECTION_CTX*)Context;
 
     switch (Event->Type) {
     case QUIC_CONNECTION_EVENT_CONNECTED:
@@ -272,9 +280,9 @@ ClientConnectionCallback(
                 if (hs_duration > 0 && hs_duration < 100000) {
                     Ctx->HandshakeDurationMs = hs_duration;
                     Ctx->HandshakeMeasured = true;
-                    //printf("Handshake duration measured: %.2f ms\n", hs_duration);
+                    //printf("Handshake duration: %.2f ms\n", hs_duration);
                 } else {
-                    //printf("Handshake duration measured: NaN ms\n", );
+                    //printf("Handshake duration: NaN ms\n", );
                 }
          } 
         // In this sample, the client immediately shuts down the connection after the handshake.
@@ -323,12 +331,13 @@ ClientConnectionCallback(
         if (Ctx->HandshakeMeasured) {
             printf("Handshake duration: %.2f ms\n", Ctx->HandshakeDurationMs);
         } else {
-            printf("Handshake duration was not measured\n");
+            printf("Handshake duration: NaN ms\n");
         }
         
         if (!Event->SHUTDOWN_COMPLETE.AppCloseInProgress) {
             MsQuic->ConnectionClose(Connection);
         }
+        free(Ctx); // liberar memoria
         break;
     case QUIC_CONNECTION_EVENT_RESUMPTION_TICKET_RECEIVED:
         //
@@ -505,9 +514,16 @@ main(
                 MsQuic->ConnectionClose(Connection);
             }
         }
+
+        // Asociar contexto
+        APP_CONNECTION_CTX* Ctx = (APP_CONNECTION_CTX*)calloc(1, sizeof(APP_CONNECTION_CTX));
+        Ctx->Connection = Connection;
+        MsQuic->SetContext(Connection, Ctx);
+            
         //
         // Start the connection to the server.
         //
+
         if (QUIC_FAILED(Status = MsQuic->ConnectionStart(Connection, Configuration, QUIC_ADDRESS_FAMILY_UNSPEC, Target, UdpPort))) {
             printf("ConnectionStart failed, 0x%x!\n", Status);
             if (Connection != NULL) {
