@@ -27,7 +27,7 @@ uint16_t UdpPort = 4433;
 //
 // The default idle timeout period (1 second) used for the protocol.
 //
-const uint64_t IdleTimeoutMs = 1000;
+const uint64_t IdleTimeoutMs = 120000;
 
 //
 // The length of buffer sent over the streams in the protocol.
