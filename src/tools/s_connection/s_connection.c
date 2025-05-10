@@ -263,7 +263,20 @@ ClientConnectionCallback(
         //
         if(VerboseEnabled){
             printf("[conn][%p] Connected\n", Connection);
-        }
+        }        
+        QUIC_STATISTICS Stats = {0};
+        uint32_t StatsLen = sizeof(Stats);
+        if (QUIC_SUCCEEDED(MsQuic->GetParam(Connection, QUIC_PARAM_CONN_STATISTICS, &StatsLen, &Stats))) {
+                double hs_duration = (Stats.Timing.HandshakeFlightEnd - Stats.Timing.Start) / 1000.0;
+
+                if (hs_duration > 0 && hs_duration < 100000) {
+                    Ctx->HandshakeDurationMs = hs_duration;
+                    Ctx->HandshakeMeasured = true;
+                    //printf("Handshake duration measured: %.2f ms\n", hs_duration);
+                } else {
+                    //printf("Handshake duration measured: NaN ms\n", );
+                }
+         } 
         // In this sample, the client immediately shuts down the connection after the handshake.
         if(Connection != NULL) {
             MsQuic->ConnectionShutdown(Connection, QUIC_CONNECTION_SHUTDOWN_FLAG_NONE, 0);
@@ -301,11 +314,18 @@ ClientConnectionCallback(
         if(VerboseEnabled){
             printf("[conn][%p] All done\n", Connection);
         }
-        QUIC_STATISTICS Stats = {0};
-        uint32_t StatsLen = sizeof(Stats);
-        if (QUIC_SUCCEEDED(MsQuic->GetParam(Connection, QUIC_PARAM_CONN_STATISTICS, &StatsLen, &Stats))) {
-            printf("Handshake duration: %.2f ms\n", (Stats.Timing.HandshakeFlightEnd - Stats.Timing.Start) / 1000.0);
+        //QUIC_STATISTICS Stats = {0};
+        //uint32_t StatsLen = sizeof(Stats);
+        //if (QUIC_SUCCEEDED(MsQuic->GetParam(Connection, QUIC_PARAM_CONN_STATISTICS, &StatsLen, &Stats))) {
+        //    printf("Handshake duration: %.2f ms\n", (Stats.Timing.HandshakeFlightEnd - Stats.Timing.Start) / 1000.0);
+        //}
+
+        if (Ctx->HandshakeMeasured) {
+            printf("Handshake duration: %.2f ms\n", Ctx->HandshakeDurationMs);
+        } else {
+            printf("Handshake duration was not measured\n");
         }
+        
         if (!Event->SHUTDOWN_COMPLETE.AppCloseInProgress) {
             MsQuic->ConnectionClose(Connection);
         }
