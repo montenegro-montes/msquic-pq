@@ -349,14 +349,17 @@ ClientConnectionCallback(
         //} else {
         //    printf("Handshake duration: NaN ms\n");
         //}
-        if (Event->SHUTDOWN_COMPLETE.TransportErrorCode != 0) {
-                printf(" Handshake failed: TransportErrorCode = 0x%" PRIx64 "\n",
-                    Event->SHUTDOWN_COMPLETE.TransportErrorCode);
+
+        
+       if (Event->SHUTDOWN_INITIATED_BY_TRANSPORT.ErrorCode != 0) {
+            printf("Handshake failed:\n");
+            printf("  Status: 0x%x\n", Event->SHUTDOWN_INITIATED_BY_TRANSPORT.Status);
+            printf("  TransportErrorCode: 0x%" PRIx64 "\n", Event->SHUTDOWN_INITIATED_BY_TRANSPORT.ErrorCode);
         }
 
-        if (Event->SHUTDOWN_COMPLETE.ApplicationErrorCode != 0) {
-                printf(" Handshake failed: ApplicationErrorCode = 0x%" PRIx64 "\n",
-                    Event->SHUTDOWN_COMPLETE.ApplicationErrorCode);
+        if (Event->SHUTDOWN_INITIATED_BY_PEER.ErrorCode != 0) {
+            printf(" Shutdown initiated by peer: ErrorCode = 0x%" PRIx64 "\n",
+                   Event->SHUTDOWN_INITIATED_BY_PEER.ErrorCode);
         }
         
         QUIC_STATISTICS Stats = {0};
