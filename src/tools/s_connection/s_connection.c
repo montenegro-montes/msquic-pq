@@ -335,9 +335,9 @@ ClientConnectionCallback(
         // The connection has completed the shutdown process and is ready to be
         // safely cleaned up.
         //
-        if(VerboseEnabled){
+        //if(VerboseEnabled){
             printf("[conn][%p] All done\n", Connection);
-        }
+        //}
         //QUIC_STATISTICS Stats = {0};
         //uint32_t StatsLen = sizeof(Stats);
         //if (QUIC_SUCCEEDED(MsQuic->GetParam(Connection, QUIC_PARAM_CONN_STATISTICS, &StatsLen, &Stats))) {
@@ -349,6 +349,15 @@ ClientConnectionCallback(
         //} else {
         //    printf("Handshake duration: NaN ms\n");
         //}
+        if (Event->SHUTDOWN_COMPLETE.TransportErrorCode != 0) {
+                printf(" Handshake failed: TransportErrorCode = 0x%" PRIx64 "\n",
+                    Event->SHUTDOWN_COMPLETE.TransportErrorCode);
+        }
+
+        if (Event->SHUTDOWN_COMPLETE.ApplicationErrorCode != 0) {
+                printf(" Handshake failed: ApplicationErrorCode = 0x%" PRIx64 "\n",
+                    Event->SHUTDOWN_COMPLETE.ApplicationErrorCode);
+        }
         
         QUIC_STATISTICS Stats = {0};
         uint32_t StatsLen = sizeof(Stats);
