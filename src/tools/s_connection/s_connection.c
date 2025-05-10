@@ -32,7 +32,7 @@ uint16_t UdpPort = 4433;
 //
 // The default idle timeout period (1 second) used for the protocol.
 //
-const uint64_t IdleTimeoutMs = 5000;
+const uint64_t IdleTimeoutMs = 100000;
 
 //
 // The length of buffer sent over the streams in the protocol.
@@ -422,7 +422,7 @@ ClientLoadConfiguration(
     // Configures the server max TLS buffer to make account for the use of 
     // post-quamtum certificates and key exchange mechanisms.
     //
-    Settings.TlsServerMaxSendBuffer = 0x8000;
+    Settings.TlsServerMaxSendBuffer = 1024 * 1024; //0x8000;
     Settings.IsSet.TlsServerMaxSendBuffer = TRUE;
 
     //
