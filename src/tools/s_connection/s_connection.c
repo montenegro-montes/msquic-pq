@@ -279,7 +279,7 @@ ClientConnectionCallback(
 
                 if (hs_duration > 0 && hs_duration < 100000) {
                     Ctx->HandshakeDurationMs = hs_duration;
-                    Ctx->HandshakeMeasured = true;
+                    Ctx->HandshakeMeasured = TRUE;
                     //printf("Handshake duration: %.2f ms\n", hs_duration);
                 } else {
                     //printf("Handshake duration: NaN ms\n", );
