@@ -367,7 +367,7 @@ ServerLoadConfiguration(
     // Configures the client max TLS buffer to make account for the use of 
     // post-quamtum certificates and key exchange mechanisms.
     //
-    Settings.TlsClientMaxSendBuffer =  1024 * 1024; //0x8000;
+    Settings.TlsClientMaxSendBuffer =  0x100000; //0x8000;
     Settings.IsSet.TlsClientMaxSendBuffer = TRUE;
 
     const char* CAfile;
