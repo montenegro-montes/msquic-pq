@@ -275,7 +275,7 @@ ClientConnectionCallback(
         if(VerboseEnabled){
             printf("[conn][%p] Connected\n", Connection);
         }        
-        /*QUIC_STATISTICS Stats = {0};
+        QUIC_STATISTICS Stats = {0};
         uint32_t StatsLen = sizeof(Stats);
         
         if (QUIC_SUCCEEDED(MsQuic->GetParam(Connection, QUIC_PARAM_CONN_STATISTICS, &StatsLen, &Stats))) {
@@ -285,21 +285,9 @@ ClientConnectionCallback(
                     Ctx->HandshakeDurationMs = hs_duration;
                     Ctx->HandshakeMeasured = TRUE;
                     //printf("Handshake duration: %.2f ms\n", hs_duration);
-                } else {
-                    printf("Handshake error!! - Start: %" PRIu64 " - End: %" PRIu64 "\n", Stats.Timing.Start, Stats.Timing.HandshakeFlightEnd);
-                    double start_ms = Stats.Timing.Start / 1000.0;
-                    double end_ms = Stats.Timing.HandshakeFlightEnd / 1000.0;
-                    printf("Handshake error!! - Start: %.2f ms - End: %.2f ms\n", start_ms, end_ms);
-                }
-                   
-                    
-                    printf("Handshake info!! - Start: %" PRIu64 " - End: %" PRIu64 "\n", Stats.Timing.Start, Stats.Timing.HandshakeFlightEnd);
-                    double start_ms = Stats.Timing.Start / 1000.0;
-                    double end_ms = Stats.Timing.HandshakeFlightEnd / 1000.0;
-                    printf("Handshake info!! - Start: %.2f ms - End: %.2f ms\n", start_ms, end_ms);
-        } */
+                } 
+        } 
 
-       // printf("Handshake finish");
         
         // In this sample, the client immediately shuts down the connection after the handshake.
         if(Connection != NULL) {
@@ -335,53 +323,21 @@ ClientConnectionCallback(
         // The connection has completed the shutdown process and is ready to be
         // safely cleaned up.
         //
-        //if(VerboseEnabled){
+        if(VerboseEnabled){
             printf("[conn][%p] All done\n", Connection);
-        //}
+        }
         //QUIC_STATISTICS Stats = {0};
         //uint32_t StatsLen = sizeof(Stats);
         //if (QUIC_SUCCEEDED(MsQuic->GetParam(Connection, QUIC_PARAM_CONN_STATISTICS, &StatsLen, &Stats))) {
         //    printf("Handshake duration: %.2f ms\n", (Stats.Timing.HandshakeFlightEnd - Stats.Timing.Start) / 1000.0);
         //}
 
-        //if (Ctx->HandshakeMeasured) {
-        //    printf("Handshake duration: %.2f ms\n", Ctx->HandshakeDurationMs);
-        //} else {
-        //    printf("Handshake duration: NaN ms\n");
-        //}
-
-        
-       if (Event->SHUTDOWN_INITIATED_BY_TRANSPORT.ErrorCode != 0) {
-            printf("Handshake failed:\n");
-            printf("  Status: 0x%x\n", Event->SHUTDOWN_INITIATED_BY_TRANSPORT.Status);
-            printf("  TransportErrorCode: 0x%" PRIx64 "\n", Event->SHUTDOWN_INITIATED_BY_TRANSPORT.ErrorCode);
+        if (Ctx->HandshakeMeasured) {
+            printf("Handshake duration: %.2f ms\n", Ctx->HandshakeDurationMs);
+        } else {
+            printf("Handshake duration: NaN ms\n");
         }
 
-        if (Event->SHUTDOWN_INITIATED_BY_PEER.ErrorCode != 0) {
-            printf(" Shutdown initiated by peer: ErrorCode = 0x%" PRIx64 "\n",
-                   Event->SHUTDOWN_INITIATED_BY_PEER.ErrorCode);
-        }
-        
-        QUIC_STATISTICS Stats = {0};
-        uint32_t StatsLen = sizeof(Stats);
-         
-        if (QUIC_SUCCEEDED(MsQuic->GetParam(Connection, QUIC_PARAM_CONN_STATISTICS, &StatsLen, &Stats))) {
-                double hs_duration = (Stats.Timing.HandshakeFlightEnd - Stats.Timing.Start) / 1000.0;
-                if (hs_duration > 0 && hs_duration < 1000000) {
-                    Ctx->HandshakeDurationMs = hs_duration;
-                    Ctx->HandshakeMeasured = TRUE;
-                    printf("Zandshake duration: %.2f ms\n", hs_duration);
-                } else {
-                    printf("Handshake error!! - Start: %" PRIu64 " - End: %" PRIu64 "\n", Stats.Timing.Start, Stats.Timing.HandshakeFlightEnd);
-                    double start_ms = Stats.Timing.Start / 1000.0;
-                    double end_ms = Stats.Timing.HandshakeFlightEnd / 1000.0;
-                    printf("Zandshake error!! - Start: %.2f ms - End: %.2f ms\n", start_ms, end_ms);
-                }
-        } 
-        else {
-            printf("Zandshake error!!");
-        }
-        
         if (!Event->SHUTDOWN_COMPLETE.AppCloseInProgress) {
             MsQuic->ConnectionClose(Connection);
         }
@@ -427,14 +383,14 @@ ClientLoadConfiguration(
     //
     // Configures the client's idle timeout. 
     //
-    Settings.IdleTimeoutMs = 120000;//IdleTimeoutMs;
+    Settings.IdleTimeoutMs = IdleTimeoutMs;
     Settings.IsSet.IdleTimeoutMs = TRUE;
 
     // 
     // Configures the server max TLS buffer to make account for the use of 
     // post-quamtum certificates and key exchange mechanisms.
     //
-    Settings.TlsServerMaxSendBuffer = 1024 * 1024; //0x8000;
+    Settings.TlsServerMaxSendBuffer = 0x100000; //0x8000;
     Settings.IsSet.TlsServerMaxSendBuffer = TRUE;
 
     //
