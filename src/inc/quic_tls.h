@@ -273,12 +273,12 @@ typedef struct CXPLAT_TLS_PROCESS_STATE {
     //
     // Total written length in Buffer.
     //
-    uint16_t BufferLength;
+    uint32_t BufferLength;
 
     //
     // Total allocation length of Buffer.
     //
-    uint16_t BufferAllocLength;
+    uint32_t BufferAllocLength;
 
     //
     // The total length of data ever written to Buffer.
