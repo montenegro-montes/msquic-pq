@@ -61,6 +61,8 @@ HQUIC Configuration;
 
 QUIC_TLS_SECRETS ClientSecrets = {0};
 
+const char* SslKeyLogEnvVar = "SSLKEYLOGFILE";
+
 //
 // The enviromment variable used to change the curve used in the handshake.
 //
@@ -126,6 +128,20 @@ GetValue(
         }
     }
     return NULL;
+}
+
+void
+EncodeHexBuffer(
+    _In_reads_(BufferLen) uint8_t* Buffer,
+    _In_ uint8_t BufferLen,
+    _Out_writes_bytes_(2*BufferLen) char* HexString
+    )
+{
+    #define HEX_TO_CHAR(x) ((x) > 9 ? ('a' + ((x) - 10)) : '0' + (x))
+    for (uint8_t i = 0; i < BufferLen; i++) {
+        HexString[i*2]     = HEX_TO_CHAR(Buffer[i] >> 4);
+        HexString[i*2 + 1] = HEX_TO_CHAR(Buffer[i] & 0xf);
+    }
 }
 
 void
@@ -601,6 +617,8 @@ main(
         }
 
         QUIC_STATUS Status;
+        const char* SslKeyLogFile = getenv(SslKeyLogEnvVar);
+
         HQUIC Connection = NULL;
 
         const char* Target;
